@@ -1,0 +1,12 @@
+database:
+  bronze_path: "data/bronze"
+  silver_path: "data/silver"
+  gold_path: "data/gold"
+
+data_quality:
+  enable_validation: true
+  fail_on_error: false
+  
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"

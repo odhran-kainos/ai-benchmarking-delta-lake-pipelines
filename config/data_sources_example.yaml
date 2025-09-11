@@ -1,0 +1,73 @@
+# Example data source configurations
+
+data_sources:
+  
+  # CSV File Source
+  csv_employees:
+    type: "csv"
+    path: "data/raw/employees.csv"
+    options:
+      header: true
+      inferSchema: true
+      delimiter: ","
+    
+  # JSON File Source  
+  json_events:
+    type: "json"
+    path: "data/raw/events/"
+    options:
+      multiLine: false
+      
+  # Parquet Files
+  parquet_sales:
+    type: "parquet"
+    path: "data/raw/sales.parquet"
+    
+  # JDBC Database
+  postgres_db:
+    type: "jdbc"
+    url: "jdbc:postgresql://localhost:5432/mydb"
+    table: "users"
+    properties:
+      user: "username"
+      password: "password"
+      driver: "org.postgresql.Driver"
+      
+  # S3 Data Lake (when deployed to cloud)
+  s3_data:
+    type: "parquet"
+    path: "s3a://my-bucket/data/"
+    options:
+      # AWS credentials would be configured separately
+      
+  # Kafka Stream (for real-time processing)
+  kafka_stream:
+    type: "kafka"
+    bootstrap_servers: "localhost:9092"
+    topics: ["user_events", "transactions"]
+    options:
+      startingOffsets: "latest"
+      
+# Target configurations
+targets:
+  
+  # Local Delta Tables
+  local_delta:
+    bronze_path: "data/bronze"
+    silver_path: "data/silver"
+    gold_path: "data/gold"
+    
+  # Cloud Delta Lake
+  s3_delta:
+    bronze_path: "s3a://my-data-lake/bronze"
+    silver_path: "s3a://my-data-lake/silver"
+    gold_path: "s3a://my-data-lake/gold"
+    
+  # Database Output
+  postgres_output:
+    type: "jdbc"
+    url: "jdbc:postgresql://localhost:5432/analytics"
+    properties:
+      user: "analytics_user"
+      password: "password"
+      driver: "org.postgresql.Driver"

@@ -1,0 +1,16 @@
+spark:
+  app_name: "Delta Lakehouse Local"
+  master: "local[*]"
+  config:
+    spark.sql.extensions: "io.delta.sql.DeltaSparkSessionExtension"
+    spark.sql.catalog.spark_catalog: "org.apache.spark.sql.delta.catalog.DeltaCatalog"
+    spark.sql.adaptive.enabled: "true"
+    spark.sql.adaptive.coalescePartitions.enabled: "true"
+    spark.serializer: "org.apache.spark.serializer.KryoSerializer"
+    spark.driver.memory: "2g"
+    spark.executor.memory: "2g"
+    spark.sql.execution.arrow.maxRecordsPerBatch: "10000"
+
+delta:
+  data_path: "./data"
+  checkpoint_location: "./data/checkpoints"
