@@ -14,3 +14,4 @@ spark:
 delta:
   data_path: "./data"
   checkpoint_location: "./data/checkpoints"
+

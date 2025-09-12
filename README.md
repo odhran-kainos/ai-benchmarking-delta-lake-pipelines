@@ -15,7 +15,7 @@ A Delta Lake pipeline framework for building declarative data pipelines with Spa
 
 ### System Requirements
 
-- **Java 11 or higher**: Required for Spark
+- **Java 11 or higher** but not higher than 17: Required for Spark
 - **Python 3.10.x**: Recommended for compatibility with Spark/Delta
 - **pyenv**: For Python version management
 
@@ -26,7 +26,7 @@ A Delta Lake pipeline framework for building declarative data pipelines with Spa
 brew install pyenv
 
 # Install Java (required for Spark)
-brew install openjdk@11
+brew install openjdk@17
 
 # Add Java to your path
 echo 'export PATH="/opt/homebrew/opt/openjdk@11/bin:$PATH"' >> ~/.zshrc
@@ -39,7 +39,7 @@ source ~/.zshrc
 ```bash
 # Install Java
 sudo apt update
-sudo apt install openjdk-11-jdk
+sudo apt install openjdk-17-jdk
 
 # Install pyenv
 curl https://pyenv.run | bash
