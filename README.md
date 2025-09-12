@@ -295,10 +295,10 @@ spark:
 
 ## Version Compatibility
 
-- **Spark**: 3.5.0
-- **Delta Lake**: 3.0.0 
+- **Spark**: 3.5.2
+- **Delta Lake**: 3.2.0
 - **Python**: 3.10.x
-- **Java**: 11 or higher
+- **Java**: 11 or 17
 - **Scala**: 2.12 (included with Spark)
 
 ## Contributing
