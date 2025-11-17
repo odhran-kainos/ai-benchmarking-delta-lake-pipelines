@@ -1,5 +1,6 @@
 {
-  "task_id": "T1",
-  "duration_seconds": 1,
-  "timestamp": "2025-11-17T10:16:34Z"
+  "rows_raw": 1070,
+  "rows_invalid": 0,
+  "rows_loaded": 1070,
+  "ingestion_duration_seconds": 17.01
 }

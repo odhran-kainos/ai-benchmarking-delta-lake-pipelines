@@ -8,6 +8,11 @@ import pytest
 from pathlib import Path
 from pyspark.sql import functions as F
 from delta import DeltaTable
+import sys
+import os
+
+# Add project root to path
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 
 class TestT1BronzeIngestion:
@@ -20,13 +25,21 @@ class TestT1BronzeIngestion:
         Acceptance Criteria:
         - Delta table bronze_transactions created with expected columns
         """
-        # This assumes the implementation creates the table at data/bronze/transactions
-        # Implementations should be tested against a test output directory
-        table_path = bronze_output_dir / "transactions"
+        from pipelines.bronze_transactions_pipeline import BronzeTransactionsPipeline
         
-        # Implementation would have created this table
-        # For now, we'll mark this as a template test that requires implementation
-        pytest.skip("Requires implementation to be present - used for benchmark evaluation")
+        # Create pipeline with temporary config
+        pipeline = BronzeTransactionsPipeline(spark_session, "config/pipeline_config.yaml")
+        
+        # Override output path for testing
+        pipeline.config['database']['bronze_path'] = str(bronze_output_dir)
+        
+        # Run pipeline
+        metrics = pipeline.run()
+        
+        # Verify table exists
+        table_path = bronze_output_dir / "transactions"
+        assert table_path.exists(), "Bronze transactions table was not created"
+        assert DeltaTable.isDeltaTable(spark_session, str(table_path)), "Path is not a valid Delta table"
     
     def test_required_columns_present(self, spark_session, bronze_output_dir):
         """
@@ -41,11 +54,13 @@ class TestT1BronzeIngestion:
         - _ingest_ts (metadata - timestamp)
         - _file_name (metadata - string)
         """
+        from pipelines.bronze_transactions_pipeline import BronzeTransactionsPipeline
+        
+        pipeline = BronzeTransactionsPipeline(spark_session, "config/pipeline_config.yaml")
+        pipeline.config['database']['bronze_path'] = str(bronze_output_dir)
+        pipeline.run()
+        
         table_path = bronze_output_dir / "transactions"
-        
-        if not table_path.exists():
-            pytest.skip("Bronze table not created yet")
-        
         df = spark_session.read.format("delta").load(str(table_path))
         
         required_columns = {
@@ -72,10 +87,13 @@ class TestT1BronzeIngestion:
         
         Note: The sample data has 1070 rows. All should be valid (have transaction_id).
         """
-        table_path = bronze_output_dir / "transactions"
+        from pipelines.bronze_transactions_pipeline import BronzeTransactionsPipeline
         
-        if not table_path.exists():
-            pytest.skip("Bronze table not created yet")
+        pipeline = BronzeTransactionsPipeline(spark_session, "config/pipeline_config.yaml")
+        pipeline.config['database']['bronze_path'] = str(bronze_output_dir)
+        metrics = pipeline.run()
+        
+        table_path = bronze_output_dir / "transactions"
         
         # Count source rows
         source_df = spark_session.read.json(sample_transactions_path)
@@ -101,11 +119,14 @@ class TestT1BronzeIngestion:
         Acceptance Criteria:
         - Ingestion metadata columns populated (non-null)
         """
+        from pipelines.bronze_transactions_pipeline import BronzeTransactionsPipeline
+        
+        pipeline = BronzeTransactionsPipeline(spark_session, "config/pipeline_config.yaml")
+        pipeline.config['database']['bronze_path'] = str(bronze_output_dir)
+        pipeline.config['database']['bronze_path'] = str(bronze_output_dir)
+        pipeline.run()
+        
         table_path = bronze_output_dir / "transactions"
-        
-        if not table_path.exists():
-            pytest.skip("Bronze table not created yet")
-        
         df = spark_session.read.format("delta").load(str(table_path))
         
         # Check _ingest_ts is not null
@@ -122,11 +143,14 @@ class TestT1BronzeIngestion:
         
         Note: This is a data quality check beyond the basic T1 requirements.
         """
+        from pipelines.bronze_transactions_pipeline import BronzeTransactionsPipeline
+        
+        pipeline = BronzeTransactionsPipeline(spark_session, "config/pipeline_config.yaml")
+        pipeline.config['database']['bronze_path'] = str(bronze_output_dir)
+        pipeline.config['database']['bronze_path'] = str(bronze_output_dir)
+        pipeline.run()
+        
         table_path = bronze_output_dir / "transactions"
-        
-        if not table_path.exists():
-            pytest.skip("Bronze table not created yet")
-        
         df = spark_session.read.format("delta").load(str(table_path))
         
         # All rows should have transaction_id (per validation requirement)
@@ -149,11 +173,13 @@ class TestT1BronzeIngestion:
         """
         Test that columns have appropriate data types.
         """
+        from pipelines.bronze_transactions_pipeline import BronzeTransactionsPipeline
+        
+        pipeline = BronzeTransactionsPipeline(spark_session, "config/pipeline_config.yaml")
+        pipeline.config['database']['bronze_path'] = str(bronze_output_dir)
+        pipeline.run()
+        
         table_path = bronze_output_dir / "transactions"
-        
-        if not table_path.exists():
-            pytest.skip("Bronze table not created yet")
-        
         df = spark_session.read.format("delta").load(str(table_path))
         schema = df.schema
         

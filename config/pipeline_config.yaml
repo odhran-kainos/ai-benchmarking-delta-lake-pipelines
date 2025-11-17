@@ -3,6 +3,12 @@ database:
   silver_path: "data/silver"
   gold_path: "data/gold"
 
+data_sources:
+  transactions:
+    path: "data/raw_seed/transactions.json"
+    format: "json"
+    schema_enforcement: true
+
 data_quality:
   enable_validation: true
   fail_on_error: false
