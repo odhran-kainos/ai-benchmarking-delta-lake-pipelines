@@ -1,0 +1,26 @@
+# Evaluation Results Directory
+
+This directory contains evaluation results for AI tool benchmarks.
+
+## Structure
+
+```
+evaluations/
+├── <tool-name>/          # e.g., copilot/, cursor/, codeium/
+│   ├── T1_scorecard.yaml      # Manual scoring for task T1
+│   ├── T1_diff_report.md      # Human-readable diff analysis
+│   ├── T1_metrics.json        # Automated metrics (LOC, complexity, etc.)
+│   └── ...
+└── comparison/
+    ├── T1_tool_comparison.md   # Side-by-side comparison
+    └── T1_comparison_metrics.json
+```
+
+## Workflow
+
+1. AI tool implementations live in branches: `tool/<name>/task-<ID>`
+2. Evaluation scripts generate artifacts in this directory
+3. Evaluation results are committed and merged to main
+4. Implementation branches are tagged and optionally deleted
+
+See `benchmark/README.md` for complete workflow documentation.

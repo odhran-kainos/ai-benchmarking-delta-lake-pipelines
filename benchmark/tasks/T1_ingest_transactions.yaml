@@ -1,0 +1,24 @@
+id: T1
+title: "Add Bronze ingestion for synthetic transactions dataset"
+description: |
+  Introduce a new Bronze layer ingestion pipeline reading JSON transaction files,
+  performing schema normalization, basic type casting, and adding ingestion metadata.
+goals:
+  - Create config entry for transactions source (path, format, schema enforcement flag).
+  - Implement ingestion job with:
+    - Schema inference fallback → explicit schema class
+    - Add columns: _ingest_ts (timestamp), _file_name
+    - Basic validation: reject rows missing transaction_id
+  - Write to Bronze Delta table: bronze_transactions
+acceptance_criteria:
+  - Delta table bronze_transactions created with expected columns.
+  - Row count matches input minus invalid rows.
+  - Ingestion metadata columns populated (non-null).
+metrics:
+  - rows_raw
+  - rows_invalid
+  - rows_loaded
+  - ingestion_duration_seconds
+ai_guidance:
+  - Prefer configuration-driven changes (avoid hardcoding paths).
+  - Reuse existing pipeline utility patterns.

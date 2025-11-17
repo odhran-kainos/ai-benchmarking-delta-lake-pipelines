@@ -24,6 +24,7 @@ A Delta Lake pipeline framework for building declarative data pipelines with Spa
 ```bash
 # Install pyenv if you haven't already
 brew install pyenv
+brew install pyenv-virtualenv
 
 # Install Java (required for Spark)
 brew install openjdk@17
@@ -73,7 +74,7 @@ echo $JAVA_HOME
 cd delta-lake-pipelines
 
 # Install all dependencies
-pip install -r requirements.txt
+pip install --trusted-host pypi.org -r requirements.txt
 ```
 
 ### 3. Verify Installation

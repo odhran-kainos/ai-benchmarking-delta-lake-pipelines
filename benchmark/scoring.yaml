@@ -1,0 +1,16 @@
+weights:
+  correctness: 0.25
+  maintainability: 0.15
+  data_quality: 0.15
+  planning: 0.15
+  performance: 0.10
+  documentation: 0.10
+  security: 0.05
+  productivity: 0.05
+thresholds:
+  coverage_min: 0.70
+documentation_rubric:
+  clarity:
+    1: "Minimal or unclear"
+    3: "Adequate explanation"
+    5: "Clear, structured, rationale provided"

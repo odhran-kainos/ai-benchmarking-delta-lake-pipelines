@@ -1,0 +1,16 @@
+id: T2
+title: "Silver enrichment: join transactions with customers"
+description: |
+  Create an enriched Silver table combining transactions and customer dimension data.
+goals:
+  - Implement late-arriving handling: if customer not found, tag as 'UNKNOWN'.
+  - Add derived column: transaction_value_vat = amount * 1.20 (sample VAT logic).
+  - Ensure duplicates in transactions (by transaction_id) keep latest by event_timestamp.
+acceptance_criteria:
+  - No duplicate transaction_id rows post-enrichment.
+  - Unknown customers flagged consistently.
+metrics:
+  - duplicates_detected
+  - duplicates_removed
+  - unknown_customers
+  - enrichment_duration_seconds

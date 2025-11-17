@@ -1,0 +1,583 @@
+# Comprehensive Scoring Rubric for AI-Generated Delta Lake Pipelines
+# This rubric provides detailed criteria for evaluating AI tools on pipeline implementation tasks
+
+version: "1.0"
+evaluation_framework:
+  description: "Detailed 5-point scoring rubrics for each dimension"
+  scale: "1-5 where 5=Excellent, 4=Good, 3=Acceptable, 2=Poor, 1=Inadequate"
+  
+dimensions:
+  correctness:
+    weight: 0.25
+    description: "Functional accuracy and correctness of implementation"
+    rubric:
+      5_excellent:
+        criteria:
+          - "All test cases pass (100%)"
+          - "Output data matches expected schema perfectly"
+          - "Handles all edge cases correctly"
+          - "No logical errors or bugs"
+          - "Delta Lake operations executed correctly (MERGE, UPDATE, DELETE)"
+        examples:
+          - "Transaction ingestion with perfect deduplication"
+          - "Correct SCD Type 2 implementation with valid_from/valid_to"
+          - "Proper handling of null values and data type conversions"
+      4_good:
+        criteria:
+          - "90-99% test coverage passing"
+          - "Minor edge cases missed but core functionality solid"
+          - "Output schema matches with minor formatting differences"
+          - "One or two non-critical bugs that don't affect main use case"
+        examples:
+          - "Missing validation for one uncommon input format"
+          - "Timestamp precision differs slightly but functionally equivalent"
+      3_acceptable:
+        criteria:
+          - "70-89% test coverage passing"
+          - "Core functionality works but several edge cases unhandled"
+          - "Schema issues that require minor adjustments"
+          - "Some bugs present but workarounds available"
+        examples:
+          - "Deduplication logic works but performance suboptimal"
+          - "Missing error handling for malformed input"
+      2_poor:
+        criteria:
+          - "50-69% test coverage passing"
+          - "Significant functional gaps"
+          - "Schema mismatches requiring rework"
+          - "Multiple bugs affecting usability"
+        examples:
+          - "Incorrect join logic producing wrong aggregations"
+          - "Data type conversions losing precision"
+      1_inadequate:
+        criteria:
+          - "Less than 50% test coverage passing"
+          - "Code doesn't execute or produces completely wrong results"
+          - "Fundamental misunderstanding of requirements"
+        examples:
+          - "Pipeline crashes on execution"
+          - "Output completely unrelated to expected results"
+    automated_checks:
+      - test_coverage_percentage: "pytest --cov"
+      - schema_validation: "compare output schema to expected"
+      - data_quality_checks: "null counts, duplicate counts, referential integrity"
+    manual_review:
+      - "Review edge case handling logic"
+      - "Validate Delta Lake time travel capability"
+      - "Check transaction isolation levels"
+
+  maintainability:
+    weight: 0.15
+    description: "Code quality, readability, and long-term sustainability"
+    rubric:
+      5_excellent:
+        criteria:
+          - "Clear, self-documenting code with meaningful names"
+          - "Proper separation of concerns (config, business logic, I/O)"
+          - "Follows PEP 8 and PySpark best practices"
+          - "DRY principle applied - no code duplication"
+          - "Consistent error handling patterns"
+          - "Type hints used throughout"
+        examples:
+          - "Reusable functions for common Delta operations"
+          - "Configuration externalized to YAML files"
+          - "Helper classes for schema definitions"
+      4_good:
+        criteria:
+          - "Generally readable with occasional unclear sections"
+          - "Mostly follows style guidelines with minor violations"
+          - "Some code duplication but not excessive"
+          - "Error handling present but inconsistent"
+        examples:
+          - "Similar logic duplicated in 2-3 places"
+          - "Missing type hints on some functions"
+      3_acceptable:
+        criteria:
+          - "Code works but requires effort to understand"
+          - "Multiple style violations"
+          - "Noticeable code duplication"
+          - "Minimal error handling"
+        examples:
+          - "Large functions doing multiple things"
+          - "Magic numbers hardcoded in business logic"
+      2_poor:
+        criteria:
+          - "Hard to follow logic flow"
+          - "Extensive code duplication"
+          - "Poor naming conventions"
+          - "Little to no error handling"
+        examples:
+          - "Single 200+ line function"
+          - "Variables named x, y, temp, data1, data2"
+      1_inadequate:
+        criteria:
+          - "Unmaintainable spaghetti code"
+          - "No structure or organization"
+          - "Completely ignores best practices"
+        examples:
+          - "All logic in a single file with no functions"
+          - "No comments and cryptic variable names"
+    automated_checks:
+      - pylint_score: ">= 8.0/10"
+      - complexity: "cyclomatic complexity < 10 per function"
+      - duplication: "< 5% duplicate code"
+    manual_review:
+      - "Code structure and organization"
+      - "Naming consistency and clarity"
+      - "Design patterns appropriateness"
+
+  data_quality:
+    weight: 0.15
+    description: "Data validation, integrity, and quality controls"
+    rubric:
+      5_excellent:
+        criteria:
+          - "Comprehensive data validation at ingestion"
+          - "Schema enforcement with proper constraints"
+          - "Data quality metrics tracked and logged"
+          - "Automated alerts for quality issues"
+          - "Proper handling of bad records with quarantine"
+        examples:
+          - "Validation rules for all critical fields"
+          - "Referential integrity checks between tables"
+          - "Data profiling and anomaly detection"
+      4_good:
+        criteria:
+          - "Key validations implemented"
+          - "Schema enforcement present"
+          - "Basic quality metrics tracked"
+          - "Bad records logged but not quarantined"
+        examples:
+          - "Null checks on required fields"
+          - "Basic range validation on numeric fields"
+      3_acceptable:
+        criteria:
+          - "Minimal validation (nulls, types)"
+          - "Schema defined but loosely enforced"
+          - "Some quality issues logged"
+        examples:
+          - "Type checking but no business rule validation"
+          - "Error counts logged but no threshold alerts"
+      2_poor:
+        criteria:
+          - "Very limited validation"
+          - "No quality metrics"
+          - "Silent failures on bad data"
+        examples:
+          - "Only catches schema mismatches"
+          - "Invalid data passes through undetected"
+      1_inadequate:
+        criteria:
+          - "No data validation"
+          - "Corrupt data allowed in pipeline"
+          - "No quality controls whatsoever"
+        examples:
+          - "Accepts any input without checks"
+          - "No error handling for malformed data"
+    automated_checks:
+      - null_rate: "< 5% for required fields"
+      - duplicate_rate: "< 1% after deduplication"
+      - schema_conformance: "100%"
+      - data_freshness: "within SLA"
+    manual_review:
+      - "Validation rule comprehensiveness"
+      - "Error handling strategies"
+      - "Data quality monitoring approach"
+
+  planning:
+    weight: 0.15
+    description: "Solution design, architecture decisions, and approach quality"
+    rubric:
+      5_excellent:
+        criteria:
+          - "Clear implementation plan before coding"
+          - "Appropriate design patterns selected"
+          - "Scalability considerations documented"
+          - "Trade-offs explicitly evaluated"
+          - "Modular architecture enabling reuse"
+        examples:
+          - "Medallion architecture properly implemented"
+          - "Incremental processing strategy for large datasets"
+          - "Idempotent operations for retry safety"
+      4_good:
+        criteria:
+          - "Reasonable approach with minor gaps"
+          - "Design patterns mostly appropriate"
+          - "Some scalability considerations"
+          - "Modular but could be improved"
+        examples:
+          - "Good structure but some tight coupling"
+          - "Batch processing when streaming might be better"
+      3_acceptable:
+        criteria:
+          - "Workable approach but suboptimal"
+          - "Limited architectural thinking"
+          - "Scalability not considered"
+          - "Minimal modularity"
+        examples:
+          - "Monolithic design that works for small scale"
+          - "No consideration of incremental processing"
+      2_poor:
+        criteria:
+          - "Questionable design decisions"
+          - "No clear architecture"
+          - "Will not scale"
+          - "Tightly coupled components"
+        examples:
+          - "Full table scans on large datasets"
+          - "No partitioning strategy"
+      1_inadequate:
+        criteria:
+          - "No apparent planning"
+          - "Random code assembly"
+          - "Fundamentally flawed approach"
+        examples:
+          - "Loading entire dataset into memory"
+          - "No understanding of distributed computing"
+    automated_checks:
+      - partition_strategy: "presence of partitioning"
+      - incremental_logic: "delta processing implemented"
+    manual_review:
+      - "Architecture appropriateness for requirements"
+      - "Design pattern selection rationale"
+      - "Scalability considerations"
+
+  performance:
+    weight: 0.10
+    description: "Execution efficiency and resource utilization"
+    rubric:
+      5_excellent:
+        criteria:
+          - "Optimal execution time (< 50% of baseline)"
+          - "Efficient resource utilization"
+          - "Proper partitioning and indexing"
+          - "Broadcast joins used appropriately"
+          - "Z-ordering or similar optimization applied"
+        examples:
+          - "Predicate pushdown leveraged effectively"
+          - "Column pruning reduces I/O"
+          - "Appropriate caching strategy"
+      4_good:
+        criteria:
+          - "Good performance (50-75% of baseline)"
+          - "Reasonable resource usage"
+          - "Basic optimizations applied"
+        examples:
+          - "Partitioning present but not optimal"
+          - "Some unnecessary shuffles"
+      3_acceptable:
+        criteria:
+          - "Acceptable performance (75-100% of baseline)"
+          - "No major bottlenecks"
+          - "Minimal optimization"
+        examples:
+          - "Works but could be faster"
+          - "No obvious performance anti-patterns"
+      2_poor:
+        criteria:
+          - "Slow performance (100-150% of baseline)"
+          - "Inefficient operations"
+          - "Resource waste"
+        examples:
+          - "Multiple full table scans"
+          - "Unnecessary data movement"
+      1_inadequate:
+        criteria:
+          - "Extremely poor performance (> 150% of baseline)"
+          - "Severe inefficiencies"
+          - "Resource exhaustion"
+        examples:
+          - "Out of memory errors"
+          - "Cross joins on large tables"
+    automated_checks:
+      - execution_time: "seconds"
+      - memory_usage: "peak MB"
+      - shuffle_data: "MB shuffled"
+    manual_review:
+      - "Query plan analysis"
+      - "Partitioning strategy effectiveness"
+      - "Optimization techniques applied"
+
+  documentation:
+    weight: 0.10
+    description: "Code documentation and usage instructions"
+    rubric:
+      5_excellent:
+        criteria:
+          - "Comprehensive README with examples"
+          - "All functions have docstrings"
+          - "Architecture diagrams included"
+          - "Usage examples for common scenarios"
+          - "Troubleshooting guide provided"
+        examples:
+          - "Step-by-step setup instructions"
+          - "Example configurations for different use cases"
+          - "API documentation auto-generated"
+      4_good:
+        criteria:
+          - "Good README coverage"
+          - "Most functions documented"
+          - "Basic usage examples"
+        examples:
+          - "Setup and run instructions clear"
+          - "Missing some edge case documentation"
+      3_acceptable:
+        criteria:
+          - "Basic README present"
+          - "Some functions documented"
+          - "Minimal examples"
+        examples:
+          - "Enough to get started but requires code reading"
+          - "No troubleshooting information"
+      2_poor:
+        criteria:
+          - "Sparse documentation"
+          - "Few docstrings"
+          - "No examples"
+        examples:
+          - "One-line README"
+          - "Have to read code to understand"
+      1_inadequate:
+        criteria:
+          - "No documentation"
+          - "No comments"
+          - "No usage guidance"
+        examples:
+          - "Empty or missing README"
+          - "No inline comments explaining complex logic"
+    automated_checks:
+      - docstring_coverage: ">= 80%"
+      - readme_present: "boolean"
+    manual_review:
+      - "Documentation clarity and completeness"
+      - "Example quality and coverage"
+      - "Troubleshooting information"
+
+  security:
+    weight: 0.05
+    description: "Security best practices and credential handling"
+    rubric:
+      5_excellent:
+        criteria:
+          - "No credentials in code"
+          - "Proper use of secret management"
+          - "Input sanitization implemented"
+          - "Least privilege access patterns"
+          - "Security scanning passed"
+        examples:
+          - "Credentials loaded from environment/vault"
+          - "SQL injection prevention in dynamic queries"
+          - "Data encryption at rest configured"
+      4_good:
+        criteria:
+          - "No hardcoded secrets"
+          - "Basic input validation"
+          - "Reasonable access controls"
+        examples:
+          - "Environment variables for credentials"
+          - "Parameter validation present"
+      3_acceptable:
+        criteria:
+          - "No obvious security flaws"
+          - "Credentials handled externally"
+          - "Minimal input validation"
+        examples:
+          - "Config file for credentials (not checked in)"
+          - "Basic sanitization"
+      2_poor:
+        criteria:
+          - "Security concerns present"
+          - "Weak credential handling"
+          - "No input validation"
+        examples:
+          - "Credentials in config files in repo"
+          - "No SQL injection protection"
+      1_inadequate:
+        criteria:
+          - "Hardcoded credentials"
+          - "Major security vulnerabilities"
+          - "No security considerations"
+        examples:
+          - "Passwords in source code"
+          - "No authentication or authorization"
+    automated_checks:
+      - secrets_scan: "no credentials detected"
+      - dependency_vulnerabilities: "0 high/critical"
+    manual_review:
+      - "Credential management approach"
+      - "Input validation patterns"
+      - "Access control implementation"
+
+  productivity:
+    weight: 0.05
+    description: "Development speed and iteration efficiency"
+    rubric:
+      5_excellent:
+        criteria:
+          - "Time to first working version < 20% of time budget"
+          - "Minimal iterations needed for correctness"
+          - "Efficient debugging and problem-solving"
+          - "Reusable components created"
+        examples:
+          - "First version nearly production-ready"
+          - "Proactive error handling reduces debugging"
+      4_good:
+        criteria:
+          - "Time to completion 20-40% of budget"
+          - "Few iterations needed"
+          - "Generally efficient workflow"
+        examples:
+          - "1-2 debugging cycles to fix issues"
+          - "Most edge cases anticipated"
+      3_acceptable:
+        criteria:
+          - "Time to completion 40-60% of budget"
+          - "Several iterations required"
+          - "Average efficiency"
+        examples:
+          - "3-4 debugging cycles"
+          - "Some rework needed"
+      2_poor:
+        criteria:
+          - "Time to completion 60-80% of budget"
+          - "Many iterations needed"
+          - "Inefficient approach"
+        examples:
+          - "Significant rework required"
+          - "Trial and error debugging"
+      1_inadequate:
+        criteria:
+          - "Time to completion > 80% of budget or incomplete"
+          - "Excessive iterations"
+          - "Very inefficient process"
+        examples:
+          - "Multiple false starts"
+          - "Unable to complete in time budget"
+    automated_checks:
+      - time_to_completion: "minutes"
+      - iteration_count: "number of major revisions"
+    manual_review:
+      - "Problem-solving approach quality"
+      - "Efficiency of debugging process"
+      - "Reusability of created components"
+
+# Scoring Calculation
+scoring_methodology:
+  formula: "total_score = Σ(dimension_score * dimension_weight)"
+  normalization: "scores normalized to 0-100 scale"
+  example:
+    correctness: 5
+    maintainability: 4
+    data_quality: 4
+    planning: 4
+    performance: 3
+    documentation: 4
+    security: 5
+    productivity: 4
+    calculation: "(5*0.25) + (4*0.15) + (4*0.15) + (4*0.15) + (3*0.10) + (4*0.10) + (5*0.05) + (4*0.05)"
+    total: "4.15/5 = 83.0/100"
+
+# Evaluation Process
+evaluation_process:
+  1_automated_testing:
+    - "Run pytest suite"
+    - "Collect coverage metrics"
+    - "Execute performance benchmarks"
+    - "Run security scans"
+    - "Validate data quality checks"
+  
+  2_manual_review:
+    - "Review code quality and structure"
+    - "Assess documentation completeness"
+    - "Evaluate architectural decisions"
+    - "Check edge case handling"
+    - "Verify best practices adherence"
+  
+  3_scoring:
+    - "Apply rubric to each dimension"
+    - "Record scores in evaluation scorecard"
+    - "Calculate weighted total"
+    - "Document rationale for scores"
+  
+  4_comparison:
+    - "Compare scores across AI tools"
+    - "Identify strengths and weaknesses"
+    - "Generate comparison report"
+
+# AI Tool Comparison Framework
+tool_comparison:
+  fairness_principles:
+    - "Same task specifications for all tools"
+    - "Same evaluation criteria and rubric"
+    - "Same time budget per task"
+    - "Same compute resources available"
+    - "Blind evaluation where possible"
+  
+  comparison_dimensions:
+    - "Overall score (weighted average)"
+    - "Per-dimension scores"
+    - "Consistency across tasks"
+    - "Strengths and weaknesses"
+    - "Best use cases for each tool"
+
+# Example Evaluations
+example_evaluations:
+  excellent_score:
+    tool: "Example AI Tool A"
+    task: "T1_ingest_transactions"
+    scores:
+      correctness: 5
+      maintainability: 5
+      data_quality: 5
+      planning: 4
+      performance: 4
+      documentation: 4
+      security: 5
+      productivity: 5
+    total: "4.70/5 = 94.0/100"
+    notes: "Nearly flawless implementation with excellent code quality"
+  
+  good_score:
+    tool: "Example AI Tool B"
+    task: "T2_silver_enrichment"
+    scores:
+      correctness: 4
+      maintainability: 4
+      data_quality: 4
+      planning: 4
+      performance: 3
+      documentation: 3
+      security: 4
+      productivity: 4
+    total: "3.85/5 = 77.0/100"
+    notes: "Solid implementation with room for optimization"
+  
+  acceptable_score:
+    tool: "Example AI Tool C"
+    task: "T3_gold_aggregates"
+    scores:
+      correctness: 3
+      maintainability: 3
+      data_quality: 3
+      planning: 3
+      performance: 3
+      documentation: 2
+      security: 3
+      productivity: 3
+    total: "2.95/5 = 59.0/100"
+    notes: "Functional but needs improvement in several areas"
+  
+  poor_score:
+    tool: "Example AI Tool D"
+    task: "T4_scd_updates"
+    scores:
+      correctness: 2
+      maintainability: 2
+      data_quality: 2
+      planning: 2
+      performance: 2
+      documentation: 1
+      security: 2
+      productivity: 2
+    total: "1.95/5 = 39.0/100"
+    notes: "Significant issues requiring major rework"

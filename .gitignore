@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.pyc
+
+# Virtual env
+.env/
+.venv/
+
+# Delta Lake tables (generated - exclude all)
+data/bronze/
+data/silver/
+data/gold/
+
+# Spark metadata
+spark-warehouse/
+spark-warehouse-test/
+
+# Raw seed data - exclude temp/intermediate files only
+data/raw_seed/*.parquet
+data/raw_seed/*.csv
+data/raw_seed/*.json.tmp
+
+# Benchmark outputs
+benchmark/metrics/**/*.tmp
+benchmark/metrics/**/*.log
+
+# Secrets
+*.env
+.secrets.baseline
+
+# Coverage / test
+.coverage
+pytest_cache/
+htmlcov/
+.pytest_cache/
+
+# MacOS
+.DS_Store
+
+# Visual Studio Code
+.vscode/

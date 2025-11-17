@@ -26,6 +26,7 @@ pyyaml
 jupyter
 notebook
 pytest
+pytest-cov
 
 # Additional utilities
 python-dateutil
