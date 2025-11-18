@@ -142,11 +142,21 @@ def check_constitution_compliance(implementation_path: Path) -> list[str]:
     """
     violations = []
     
+    # Files to exclude from checking (framework/example files)
+    exclude_files = {
+        'sample_etl_pipeline.py',
+        'base_pipeline.py',
+        'spark_session.py',
+        'delta_operations.py',
+        'prefect_flows.py',
+        '__init__.py'
+    }
+    
     # Look for pipeline Python files
     pipeline_files = list(implementation_path.glob('pipelines/**/*.py'))
     
     for py_file in pipeline_files:
-        if py_file.name.startswith('__'):
+        if py_file.name.startswith('__') or py_file.name in exclude_files:
             continue
         
         try:

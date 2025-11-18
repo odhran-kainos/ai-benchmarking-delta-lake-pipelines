@@ -170,13 +170,23 @@ def check_type_hints(implementation_path: Path) -> float:
     Returns:
         Estimated coverage as 0.0-1.0
     """
+    # Files to exclude from checking (framework/example files)
+    exclude_files = {
+        'sample_etl_pipeline.py',
+        'base_pipeline.py',
+        'spark_session.py',
+        'delta_operations.py',
+        'prefect_flows.py',
+        '__init__.py'
+    }
+    
     pipeline_files = list(implementation_path.glob('pipelines/**/*.py'))
     
     total_functions = 0
     typed_functions = 0
     
     for py_file in pipeline_files:
-        if py_file.name.startswith('__'):
+        if py_file.name.startswith('__') or py_file.name in exclude_files:
             continue
         
         try:

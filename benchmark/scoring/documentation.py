@@ -173,13 +173,23 @@ def calculate_docstring_coverage(implementation_path: Path) -> float:
     Returns:
         Coverage as 0.0-1.0
     """
+    # Files to exclude from checking (framework/example files)
+    exclude_files = {
+        'sample_etl_pipeline.py',
+        'base_pipeline.py',
+        'spark_session.py',
+        'delta_operations.py',
+        'prefect_flows.py',
+        '__init__.py'
+    }
+    
     pipeline_files = list(implementation_path.glob('pipelines/**/*.py'))
     
     total_definitions = 0
     documented_definitions = 0
     
     for py_file in pipeline_files:
-        if py_file.name.startswith('__'):
+        if py_file.name.startswith('__') or py_file.name in exclude_files:
             continue
         
         try:
@@ -216,13 +226,23 @@ def calculate_comment_ratio(implementation_path: Path) -> float:
     Returns:
         Ratio as 0.0-1.0
     """
+    # Files to exclude from checking (framework/example files)
+    exclude_files = {
+        'sample_etl_pipeline.py',
+        'base_pipeline.py',
+        'spark_session.py',
+        'delta_operations.py',
+        'prefect_flows.py',
+        '__init__.py'
+    }
+    
     pipeline_files = list(implementation_path.glob('pipelines/**/*.py'))
     
     total_lines = 0
     comment_lines = 0
     
     for py_file in pipeline_files:
-        if py_file.name.startswith('__'):
+        if py_file.name.startswith('__') or py_file.name in exclude_files:
             continue
         
         try:

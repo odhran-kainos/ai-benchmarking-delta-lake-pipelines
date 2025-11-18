@@ -129,6 +129,16 @@ def check_for_secrets(implementation_path: Path) -> list[str]:
     """
     patterns = []
     
+    # Files to exclude from checking (framework/example files)
+    exclude_files = {
+        'sample_etl_pipeline.py',
+        'base_pipeline.py',
+        'spark_session.py',
+        'delta_operations.py',
+        'prefect_flows.py',
+        '__init__.py'
+    }
+    
     # Common secret patterns
     secret_keywords = [
         'password', 'passwd', 'pwd', 'secret', 'api_key', 
@@ -138,7 +148,7 @@ def check_for_secrets(implementation_path: Path) -> list[str]:
     pipeline_files = list(implementation_path.glob('**/*.py'))
     
     for py_file in pipeline_files:
-        if py_file.name.startswith('__'):
+        if py_file.name.startswith('__') or py_file.name in exclude_files:
             continue
         
         try:
