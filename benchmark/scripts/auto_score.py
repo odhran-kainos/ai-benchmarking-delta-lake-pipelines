@@ -438,7 +438,14 @@ def main():
     print(f"Implementation: {args.implementation}")
     
     # Create temp directory for analysis outputs
-    with tempfile.TemporaryDirectory() as tmpdir:
+    # TODO: Re-enable automatic cleanup after debugging
+    # Use tempfile.mkdtemp() for now to preserve outputs for inspection
+    # with tempfile.TemporaryDirectory() as tmpdir:
+    tmpdir = tempfile.mkdtemp(prefix='auto_score_')
+    print(f"\nAnalysis outputs saved to: {tmpdir}")
+    print("NOTE: Temporary files will NOT be automatically deleted (for debugging)")
+    
+    try:
         temp_path = Path(tmpdir)
         
         # Checkout implementation branch
@@ -521,6 +528,11 @@ def main():
         
         # Return to baseline
         checkout_branch(args.baseline, workspace)
+    
+    except Exception as e:
+        print(f"\nError during scoring: {e}")
+        checkout_branch(args.baseline, workspace)
+        return 1
     
     return 0
 
