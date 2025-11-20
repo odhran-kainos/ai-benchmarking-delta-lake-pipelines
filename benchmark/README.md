@@ -59,6 +59,33 @@ Example: `benchmark/tasks/T1_ingest_transactions.yaml`
 3. Let the AI tool generate the implementation
 4. Save the generated code in the appropriate location (usually `pipelines/`)
 
+### Step 3a: Enable Tests for the Implementation
+
+Before running tests, you need to enable the appropriate test cases for the task. Tests are organized into three categories:
+
+**1. Tests Ready to Run** (just remove conditional skip):
+These tests have complete assertion logic and only skip if the output doesn't exist yet. No code changes needed - they'll automatically run once the implementation creates the expected outputs.
+
+Examples from `tests/test_t1_bronze_ingestion.py`:
+- `test_required_columns_present` - validates bronze table schema
+- `test_row_count_validation` - checks row counts match expectations
+- `test_metadata_columns_populated` - ensures metadata fields are non-null
+- `test_transaction_id_uniqueness` - validates data quality
+- `test_data_types` - checks column types
+- `test_bronze_table_exists` - verifies Delta table creation
+- `test_invalid_records_rejected` - ensures validation logic works
+
+**2. Tests to Keep Skipped** (validated elsewhere):
+These tests are informational or validated by other parts of the benchmark framework:
+- `test_metrics_file_created` - validated by benchmark harness
+- `test_metrics_accuracy` - validated by benchmark harness  
+- `test_no_hardcoded_paths` - checked in maintainability scoring
+- `test_reuses_pipeline_patterns` - checked in maintainability scoring
+
+**Why most tests are ready to run**: All T1 tests now have complete assertions. They use conditional skips (`if not table_path.exists(): pytest.skip()`) to handle missing outputs gracefully. Once your implementation creates the bronze table, these tests will automatically execute their validation logic.
+
+**Expected test pass rate**: For a correct T1 implementation, you should see 7/7 passing tests in the `TestT1BronzeIngestion` class. The skipped tests in `TestT1Metrics` and `TestT1Configuration` don't count toward the correctness score.
+
 ### Step 4: Test the Implementation
 ```bash
 # Run the task to see if it works
